@@ -1,6 +1,42 @@
 {
   "incidents": [
     {
+      "id": 1779647909410,
+      "incidentId": "incident-memory-leak",
+      "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
+      "service": "recommendation-engine",
+      "root_cause": "Unbounded global array (globalEventCache) accumulation in Node.js recommendation-engine service",
+      "accuracy": "High",
+      "fix": "Implement an eviction policy for the globalEventCache array, such as a TTL (time-to-live) or a size limit, to prevent unbounded growth and mitigate the memory leak. Consider refactoring the cache to use a more memory-efficient data structure, such as a Map or a queue with a fixed size.",
+      "timestamp": "2026-05-24T18:38:29.410Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
+      "id": 1779647879150,
+      "incidentId": "incident-memory-leak",
+      "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
+      "service": "recommendation-engine",
+      "root_cause": "Unbounded global array (globalEventCache) accumulating user event objects in Node.js recommendation-engine service",
+      "accuracy": "High",
+      "fix": "Implement an eviction policy for the globalEventCache object, such as a TTL (time-to-live) or LRU (least-recently-used) cache, to prevent unbounded growth and mitigate the memory leak.",
+      "timestamp": "2026-05-24T18:37:59.150Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
+      "id": 1779647849126,
+      "incidentId": "incident-memory-leak",
+      "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
+      "service": "recommendation-engine",
+      "root_cause": "Unbounded global array accumulation in Node.js heap memory due to lack of eviction policy in globalEventCache object",
+      "accuracy": "High",
+      "fix": "Implement an eviction policy for the globalEventCache array, such as a TTL (time-to-live) or LRU (least-recently-used) cache, to prevent unbounded growth and reduce memory usage. Consider upgrading to a more efficient data structure, such as a Map or a dedicated caching library.",
+      "timestamp": "2026-05-24T18:37:29.126Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
       "id": 1779647609366,
       "incidentId": "incident-memory-leak",
       "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
@@ -27,6 +63,6 @@
   ],
   "patterns": {
     "api-errors": 1,
-    "node.js-heap-memory": 1
+    "node.js-heap-memory": 4
   }
 }
