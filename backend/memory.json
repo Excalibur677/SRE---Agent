@@ -1,0 +1,32 @@
+{
+  "incidents": [
+    {
+      "id": 1779647609366,
+      "incidentId": "incident-memory-leak",
+      "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
+      "service": "recommendation-engine",
+      "root_cause": "Unbounded global array (globalEventCache) accumulation in Node.js recommendation-engine service",
+      "accuracy": "High",
+      "fix": "Implement an eviction policy for the globalEventCache array, such as a LRU (Least Recently Used) cache or a size-based limit, to prevent unbounded growth and mitigate the memory leak.",
+      "timestamp": "2026-05-24T18:33:29.366Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
+      "id": 1779647308239,
+      "incidentId": "live-API Errors",
+      "title": "API Errors",
+      "service": "API",
+      "root_cause": "Recent deployment",
+      "accuracy": "High",
+      "fix": "Monitor the service for an extended period to ensure the fix is effective and make adjustments as necessary.",
+      "timestamp": "2026-05-24T18:28:28.239Z",
+      "isRecurring": false,
+      "source": "live"
+    }
+  ],
+  "patterns": {
+    "api-errors": 1,
+    "node.js-heap-memory": 1
+  }
+}

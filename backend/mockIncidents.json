@@ -1,0 +1,220 @@
+[
+  {
+    "id": "incident-db-exhaustion",
+    "title": "Database Connection Pool Exhaustion",
+    "service": "user-auth-service",
+    "severity": "CRITICAL",
+    "started_at": "2024-07-15T03:42:00Z",
+    "description": "Connection pool maxed out after v2.4.1 deployment introduced a missing db.release() call in the login handler.",
+    "metrics": {
+      "cpu_usage": [
+        { "time": "03:40", "value": 34 },
+        { "time": "03:42", "value": 41 },
+        { "time": "03:44", "value": 58 },
+        { "time": "03:46", "value": 72 },
+        { "time": "03:48", "value": 89 },
+        { "time": "03:50", "value": 95 },
+        { "time": "03:52", "value": 99 }
+      ],
+      "db_connections": [
+        { "time": "03:40", "value": 18 },
+        { "time": "03:42", "value": 35 },
+        { "time": "03:44", "value": 57 },
+        { "time": "03:46", "value": 78 },
+        { "time": "03:48", "value": 93 },
+        { "time": "03:50", "value": 100 },
+        { "time": "03:52", "value": 100 }
+      ],
+      "http_5xx_rate": [
+        { "time": "03:40", "value": 0.2 },
+        { "time": "03:42", "value": 1.4 },
+        { "time": "03:44", "value": 8.7 },
+        { "time": "03:46", "value": 24.1 },
+        { "time": "03:48", "value": 61.3 },
+        { "time": "03:50", "value": 87.4 },
+        { "time": "03:52", "value": 98.2 }
+      ]
+    },
+    "deployment_history": [
+      {
+        "version": "v2.4.0",
+        "timestamp": "2024-07-14T18:00:00Z",
+        "commit": "refactor: standardize async login handler flow",
+        "author": "priya.mehta",
+        "status": "stable"
+      },
+      {
+        "version": "v2.4.1",
+        "timestamp": "2024-07-15T03:38:00Z",
+        "commit": "fix: add retry logic to login endpoint — forgot db.release() in catch block",
+        "author": "dev.bot-ci",
+        "status": "deployed"
+      }
+    ],
+    "logs": [
+      "[2024-07-15T03:40:12Z] INFO  user-auth-service — Deployment v2.4.1 rollout complete. Pods: 4/4 healthy.",
+      "[2024-07-15T03:41:05Z] INFO  user-auth-service — Login throughput nominal. RPS: 340.",
+      "[2024-07-15T03:42:18Z] WARN  pg-pool — Connection pool utilization at 65% (65/100).",
+      "[2024-07-15T03:43:31Z] WARN  pg-pool — Connection pool utilization at 78% (78/100). Consider increasing pool size.",
+      "[2024-07-15T03:44:02Z] ERROR pg-pool — Connection pool utilization at 93% (93/100). Acquire wait time >2000ms.",
+      "[2024-07-15T03:44:47Z] ERROR user-auth-service — Error: Connection acquire timeout exceeded 5000ms at LoginHandler.execute (/app/handlers/login.js:87)",
+      "[2024-07-15T03:45:10Z] ERROR pg-pool — Pool exhausted. All 100 connections held. Rejecting new acquire requests.",
+      "[2024-07-15T03:45:11Z] CRITICAL user-auth-service — Uncaught pool rejection. HTTP 503 responses cascading. Login success rate: 4%.",
+      "[2024-07-15T03:46:00Z] CRITICAL alertmanager — P0 FIRING: user-auth-service SLO breach. Error budget exhausted. Page on-call: @sre-team.",
+      "[2024-07-15T03:46:45Z] CRITICAL pg-pool — DEADLOCK DETECTED. Held connections waiting on each other. Force-killing idle connections.",
+      "[2024-07-15T03:47:02Z] ERROR  user-auth-service — PostgreSQL FATAL: remaining connection slots reserved for non-replication superuser connections.",
+      "[2024-07-15T03:48:15Z] CRITICAL ops-monitor — CPU at 99%. Heap at 88%. JVM GC overhead limit imminent. Service degraded to 2% availability."
+    ]
+  },
+  {
+    "id": "incident-memory-leak",
+    "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
+    "service": "recommendation-engine",
+    "severity": "CRITICAL",
+    "started_at": "2024-07-16T11:15:00Z",
+    "description": "An unbounded global array accumulating user event objects introduced in v3.1.0 is consuming heap memory, approaching OOM kill threshold.",
+    "metrics": {
+      "cpu_usage": [
+        { "time": "11:15", "value": 44 },
+        { "time": "11:25", "value": 71 },
+        { "time": "11:35", "value": 38 },
+        { "time": "11:45", "value": 88 },
+        { "time": "11:55", "value": 52 },
+        { "time": "12:05", "value": 94 },
+        { "time": "12:15", "value": 67 }
+      ],
+      "db_connections": [
+        { "time": "11:15", "value": 12 },
+        { "time": "11:25", "value": 14 },
+        { "time": "11:35", "value": 15 },
+        { "time": "11:45", "value": 16 },
+        { "time": "11:55", "value": 14 },
+        { "time": "12:05", "value": 17 },
+        { "time": "12:15", "value": 15 }
+      ],
+      "http_5xx_rate": [
+        { "time": "11:15", "value": 0.1 },
+        { "time": "11:25", "value": 0.4 },
+        { "time": "11:35", "value": 1.2 },
+        { "time": "11:45", "value": 4.7 },
+        { "time": "11:55", "value": 12.3 },
+        { "time": "12:05", "value": 38.9 },
+        { "time": "12:15", "value": 74.1 }
+      ],
+      "memory_usage": [
+        { "time": "11:15", "value": 41 },
+        { "time": "11:25", "value": 54 },
+        { "time": "11:35", "value": 66 },
+        { "time": "11:45", "value": 75 },
+        { "time": "11:55", "value": 84 },
+        { "time": "12:05", "value": 93 },
+        { "time": "12:15", "value": 99 }
+      ]
+    },
+    "deployment_history": [
+      {
+        "version": "v3.0.9",
+        "timestamp": "2024-07-15T09:00:00Z",
+        "commit": "perf: switch event pipeline to async batching",
+        "author": "carlos.reyes",
+        "status": "stable"
+      },
+      {
+        "version": "v3.1.0",
+        "timestamp": "2024-07-16T11:00:00Z",
+        "commit": "feat: add real-time user behavioural telemetry tracker — push events to globalEventCache[]",
+        "author": "aisha.okafor",
+        "status": "deployed"
+      }
+    ],
+    "logs": [
+      "[2024-07-16T11:15:00Z] INFO  recommendation-engine — v3.1.0 deployed. Pods healthy. Starting real-time telemetry tracker.",
+      "[2024-07-16T11:20:14Z] INFO  recommendation-engine — globalEventCache initialized. Current size: 0 objects.",
+      "[2024-07-16T11:30:22Z] WARN  node-runtime — Heap used: 1.8GB / 2.5GB (72%). GC pressure increasing.",
+      "[2024-07-16T11:40:07Z] WARN  node-runtime — Heap used: 2.1GB / 2.5GB (84%). Major GC cycle triggered. Latency spike: +340ms.",
+      "[2024-07-16T11:50:31Z] ERROR node-runtime — Heap used: 2.3GB / 2.5GB (92%). GC running continuously. Event loop blocked for 1200ms.",
+      "[2024-07-16T11:55:18Z] ERROR recommendation-engine — globalEventCache object count: 4,821,004. No eviction policy detected.",
+      "[2024-07-16T12:00:44Z] ERROR  node-runtime — ALLOCATION FAILED — JavaScript heap out of memory. Attempting emergency GC.",
+      "[2024-07-16T12:02:09Z] CRITICAL recommendation-engine — Emergency GC failed to reclaim sufficient memory. Service response time >15s.",
+      "[2024-07-16T12:08:55Z] CRITICAL k8s-kubelet — OOMKill signal sent to recommendation-engine pod rec-eng-7b4d9f. Memory limit 2.5Gi exceeded.",
+      "[2024-07-16T12:09:01Z] CRITICAL k8s-kubelet — Pod rec-eng-7b4d9f terminated. CrashLoopBackOff initiated. Restart #1.",
+      "[2024-07-16T12:14:20Z] CRITICAL alertmanager — P0 FIRING: recommendation-engine CrashLoopBackOff. On-call paged: @platform-sre. SLA breach imminent."
+    ]
+  },
+  {
+    "id": "incident-api-timeout",
+    "title": "API Gateway Cascading 504 Timeout — Payment Vendor Failure",
+    "service": "checkout-api-gateway",
+    "severity": "CRITICAL",
+    "started_at": "2024-07-17T19:05:00Z",
+    "description": "Third-party payment processor StripeConnect is returning HTTP 500s with >30s latency, causing checkout-api-gateway to queue and exhaust all upstream worker threads.",
+    "metrics": {
+      "cpu_usage": [
+        { "time": "19:05", "value": 28 },
+        { "time": "19:07", "value": 35 },
+        { "time": "19:09", "value": 48 },
+        { "time": "19:11", "value": 62 },
+        { "time": "19:13", "value": 78 },
+        { "time": "19:15", "value": 91 },
+        { "time": "19:17", "value": 97 }
+      ],
+      "db_connections": [
+        { "time": "19:05", "value": 10 },
+        { "time": "19:07", "value": 12 },
+        { "time": "19:09", "value": 11 },
+        { "time": "19:11", "value": 13 },
+        { "time": "19:13", "value": 14 },
+        { "time": "19:15", "value": 12 },
+        { "time": "19:17", "value": 11 }
+      ],
+      "http_5xx_rate": [
+        { "time": "19:05", "value": 0.5 },
+        { "time": "19:07", "value": 3.2 },
+        { "time": "19:09", "value": 18.6 },
+        { "time": "19:11", "value": 45.3 },
+        { "time": "19:13", "value": 72.8 },
+        { "time": "19:15", "value": 91.1 },
+        { "time": "19:17", "value": 97.6 }
+      ],
+      "response_latency_ms": [
+        { "time": "19:05", "value": 210 },
+        { "time": "19:07", "value": 1850 },
+        { "time": "19:09", "value": 8400 },
+        { "time": "19:11", "value": 18200 },
+        { "time": "19:13", "value": 26700 },
+        { "time": "19:15", "value": 30100 },
+        { "time": "19:17", "value": 30000 }
+      ]
+    },
+    "deployment_history": [
+      {
+        "version": "v1.9.4",
+        "timestamp": "2024-07-17T08:00:00Z",
+        "commit": "chore: bump StripeConnect SDK to 5.2.1",
+        "author": "finance-bot",
+        "status": "stable"
+      },
+      {
+        "version": "v1.9.4",
+        "timestamp": "2024-07-17T19:04:12Z",
+        "commit": "NO DEPLOYMENT — External vendor incident. StripeConnect status page: Investigating elevated error rates.",
+        "author": "N/A",
+        "status": "no-change"
+      }
+    ],
+    "logs": [
+      "[2024-07-17T19:04:58Z] INFO  checkout-api-gateway — All systems nominal. Payment throughput: 420 tx/min.",
+      "[2024-07-17T19:05:12Z] WARN  stripe-client — POST https://api.stripe.com/v1/charges responded in 4200ms. Threshold: 2000ms.",
+      "[2024-07-17T19:06:01Z] WARN  stripe-client — POST https://api.stripe.com/v1/charges responded in 9800ms. Retrying (attempt 1/3).",
+      "[2024-07-17T19:06:45Z] ERROR stripe-client — All 3 retry attempts failed. Final response: HTTP 500 Internal Server Error from api.stripe.com.",
+      "[2024-07-17T19:07:30Z] ERROR checkout-api-gateway — Worker thread pool utilization: 87%. Requests queuing behind hanging Stripe calls.",
+      "[2024-07-17T19:08:12Z] ERROR checkout-api-gateway — Circuit breaker OPEN on route /v1/payment/charge. Failing fast for 50% of new requests.",
+      "[2024-07-17T19:09:05Z] ERROR nginx-ingress — Upstream timed out (30000ms) while reading response header. Returning 504 to client.",
+      "[2024-07-17T19:10:22Z] CRITICAL checkout-api-gateway — Worker thread pool FULL (512/512). All new payment requests immediately returning HTTP 504.",
+      "[2024-07-17T19:11:44Z] CRITICAL checkout-api-gateway — Revenue impact estimated at $14,200/min. Transaction success rate: 3.1%.",
+      "[2024-07-17T19:13:00Z] CRITICAL alertmanager — P0 FIRING: checkout SLA breach. 504 error rate >90%. Payment processing halted. Paging @on-call-payments, @sre-lead.",
+      "[2024-07-17T19:15:30Z] CRITICAL stripe-statuspage — StripeConnect CONFIRMED outage. Estimated recovery: 45 minutes. Incident ID: INC-STRIPE-20240717-001.",
+      "[2024-07-17T19:17:01Z] CRITICAL ops-monitor — Recommendation: Activate fallback payment processor (PayPal Braintree). Drain and restart gateway workers."
+    ]
+  }
+]
