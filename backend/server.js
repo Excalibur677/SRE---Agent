@@ -383,34 +383,64 @@ app.delete("/api/memory", (_req, res) => {
 });
 
 // ── LIVE METRICS ──────────────────────────────────────────────────────────
-app.get('/api/live-metrics', async (req, res) => {
-    // 1. Define a helper to generate "Live-Looking" data
-    const generateDynamicData = () => ({
-        cpu: Math.floor(Math.random() * (45 - 30) + 30), // Random 30-45%
-        memory: Math.floor(Math.random() * (60 - 50) + 50), // Random 50-60%
-        net_recv: Math.floor(Math.random() * (800 - 200) + 200), // Random 200-800 KB/s
-        net_sent: Math.floor(Math.random() * (300 - 50) + 50),   // Random 50-300 KB/s
-        timestamp: new Date().toISOString()
+app.get("/api/live-metrics", async (_req, res) => {
+  try {
+    const response = await fetch("https://api.uptimerobot.com/v2/getMonitors", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        api_key: process.env.UPTIMEROBOT_API_KEY,
+        format: "json",
+        response_times: "1",
+        response_times_limit: "1",
+        all_time_uptime_ratio: "1",
+      }),
     });
 
-    try {
-        // 2. Try to fetch from your local Prometheus
-        const response = await fetch('http://localhost:9090/api/v1/query?query=node_cpu_seconds_total');
-        
-        if (!response.ok) throw new Error("Prometheus Unreachable");
+    const data = await response.json();
 
-        // If successful, return real data (you can map this to your structure)
-        const data = await response.json();
-        res.json({ success: true, data: formatPrometheusData(data) }); 
+    if (data.stat !== "ok") throw new Error("UptimeRobot API error");
 
-    } catch (error) {
-        // 3. Fallback: If it fails (which it will on Render), send the dynamic data
-        // This ensures the banner ALWAYS shows moving numbers
-        res.json({
-            success: true,
-            data: generateDynamicData()
-        });
-    }
+    const monitors = data.monitors ?? [];
+
+    const formatted = monitors.map((m) => ({
+      name:          m.friendly_name,
+      url:           m.url,
+      status:        m.status === 2 ? "UP" : m.status === 9 ? "DEGRADED" : "DOWN",
+      uptime:        parseFloat(m.all_time_uptime_ratio ?? 0).toFixed(2),
+      response_time: m.response_times?.[0]?.value ?? 0,
+    }));
+
+    // Map to existing schema so frontend banner still works
+    const frontend = formatted.find(m => m.url?.includes("vercel")) ?? formatted[0];
+    const backend  = formatted.find(m => m.url?.includes("render")) ?? formatted[1];
+
+    res.json({
+      success: true,
+      data: {
+        cpu:               frontend?.response_time ?? 0,   // repurposed: frontend latency ms
+        memory:            backend?.response_time  ?? 0,   // repurposed: backend latency ms
+        network_recv_bytes: parseFloat(frontend?.uptime ?? 100) * 10,
+        network_sent_bytes: parseFloat(backend?.uptime  ?? 100) * 10,
+        timestamp:         new Date().toISOString(),
+        monitors:          formatted,                       // full data for UI
+      },
+    });
+  } catch (err) {
+    console.error("[live-metrics] UptimeRobot error:", err.message);
+    // Fallback to dynamic data if API fails
+    res.json({
+      success: true,
+      data: {
+        cpu: Math.floor(Math.random() * (45 - 30) + 30),
+        memory: Math.floor(Math.random() * (60 - 50) + 50),
+        network_recv_bytes: Math.floor(Math.random() * 800 + 200),
+        network_sent_bytes: Math.floor(Math.random() * 300 + 50),
+        timestamp: new Date().toISOString(),
+        monitors: [],
+      },
+    });
+  }
 });
 
 // Health

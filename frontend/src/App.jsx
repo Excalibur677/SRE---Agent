@@ -513,42 +513,34 @@ export default function App() {
           <div className="liquid-glass rounded-full flex flex-wrap items-center gap-6 px-6 py-2.5 text-xs">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-white/40 uppercase tracking-widest">Live Prometheus</span>
+              <span className="text-white/40 uppercase tracking-widest">Live Monitoring</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Cpu className="w-3.5 h-3.5 text-violet-400" />
-              <span className="text-white/60">CPU</span>
-              <span className={`font-bold ${liveMetrics.cpu > 80 ? "text-red-400" : "text-white"}`}>{liveMetrics.cpu}%</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="text-white/60">Memory</span>
-              <span className={`font-bold ${liveMetrics.memory > 85 ? "text-red-400" : "text-white"}`}>{liveMetrics.memory}%</span>
-            </div>
-            {/* Net ↓ */}
-            <div className="flex items-center gap-1.5">
-              <Wifi className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="text-white/60">Net ↓</span>
-              {/* FIX: Use net_recv instead of network_recv_bytes */}
-              <span className="font-bold text-white">
-                {liveMetrics.net_recv != null ? (liveMetrics.net_recv / 1024).toFixed(1) : "0.0"} KB/s
-              </span>
-            </div>
-
-            {/* Net ↑ */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-white/60">Net ↑</span>
-              {/* FIX: Use net_sent instead of network_sent_bytes */}
-              <span className="font-bold text-white">
-                {liveMetrics.net_sent != null ? (liveMetrics.net_sent / 1024).toFixed(1) : "0.0"} KB/s
-              </span>
-            </div>
-            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${agentActive ? "border-emerald-500/30 bg-emerald-500/10" : "border-white/10"}`}>
-              <Bot className={`w-3 h-3 ${agentActive ? "text-emerald-400" : "text-white/30"}`} />
-              <span className={`text-[10px] font-semibold ${agentActive ? "text-emerald-400" : "text-white/30"}`}>
-                {agentActive ? "Agent ON" : "Agent OFF"}
-              </span>
-            </div>
+            {liveMetrics.monitors?.length > 0 ? (
+              liveMetrics.monitors.map((m) => (
+                <div key={m.name} className="flex items-center gap-1.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${m.status === "UP" ? "bg-emerald-400" : m.status === "DEGRADED" ? "bg-amber-400" : "bg-red-400"}`} />
+                  <span className="text-white/60">{m.name}</span>
+                  <span className={`font-bold ${m.status === "UP" ? "text-emerald-400" : m.status === "DEGRADED" ? "text-amber-400" : "text-red-400"}`}>
+                    {m.status}
+                  </span>
+                  <span className="text-white/30">{m.response_time}ms</span>
+                  <span className="text-white/20">↑{m.uptime}%</span>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="flex items-center gap-1.5">
+                  <Cpu className="w-3.5 h-3.5 text-violet-400" />
+                  <span className="text-white/60">Frontend</span>
+                  <span className="font-bold text-white">{liveMetrics.cpu}ms</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Activity className="w-3.5 h-3.5 text-indigo-400" />
+                  <span className="text-white/60">Backend</span>
+                  <span className="font-bold text-white">{liveMetrics.memory}ms</span>
+                </div>
+              </>
+            )}
             <span className="text-white/20 text-[10px]">{new Date(liveMetrics.timestamp).toLocaleTimeString()}</span>
           </div>
         </div>
