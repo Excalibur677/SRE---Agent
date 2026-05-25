@@ -9,7 +9,7 @@ import {
   CloudLightning, Trash2, History, Bot, ChevronRight, Sparkles,
 } from "lucide-react";
 
-const API = "http://localhost:3001";
+const API = "https://sre-agent-v554.onrender.com";
 
 const IMGS = {
   hero:    "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80",
