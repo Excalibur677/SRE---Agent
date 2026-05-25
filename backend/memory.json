@@ -1,6 +1,198 @@
 {
   "incidents": [
     {
+      "id": 1779726028051,
+      "incidentId": "live-Slow build start time in Workers Builds",
+      "title": "Slow build start time in Workers Builds",
+      "service": "Workers Builds",
+      "root_cause": "Recent deployment",
+      "accuracy": "Medium",
+      "fix": "Roll back the recent deployment or investigate the changes made in the commit to identify the cause of the slow build start time.",
+      "timestamp": "2026-05-25T16:20:28.051Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779725571611,
+      "incidentId": "incident-memory-leak",
+      "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
+      "service": "recommendation-engine",
+      "root_cause": "Unbounded global array accumulation in Node.js heap memory due to missing eviction policy in globalEventCache",
+      "accuracy": "High",
+      "fix": "Implement an eviction policy for the globalEventCache array, such as a TTL (time-to-live) or LRU (least-recently-used) cache, to prevent unbounded growth and reduce memory usage. Consider using a more efficient data structure, such as a Map or a dedicated caching library, to store and manage user event data.",
+      "timestamp": "2026-05-25T16:12:51.611Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
+      "id": 1779725519803,
+      "incidentId": "incident-memory-leak",
+      "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
+      "service": "recommendation-engine",
+      "root_cause": "Unbounded global array accumulation in Node.js heap memory due to missing eviction policy in globalEventCache object",
+      "accuracy": "High",
+      "fix": "Implement an eviction policy for the globalEventCache object, such as a TTL (time-to-live) or LRU (least-recently-used) cache, to prevent unbounded growth and reduce memory usage. Consider using a more efficient data structure, such as a Map or a queue, to store user event objects. Additionally, monitor and adjust the cache size and eviction policy based on production workload and performance metrics.",
+      "timestamp": "2026-05-25T16:11:59.803Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
+      "id": 1779725480284,
+      "incidentId": "live-Incident with Actions",
+      "title": "Incident with Actions",
+      "service": "Actions",
+      "root_cause": "Misconfigured health check on an internal service",
+      "accuracy": "High",
+      "fix": "Strengthen health check configuration to avoid cascading failure scenarios and implement automated mitigations to rebalance traffic when a region is degraded.",
+      "timestamp": "2026-05-25T16:11:20.284Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779725403157,
+      "incidentId": "live-Audit Log Delays",
+      "title": "Audit Log Delays",
+      "service": "Audit Logs",
+      "root_cause": "Insufficient data to determine root cause, but recent deployment may be related",
+      "accuracy": "Low",
+      "fix": "Monitor the service for further incidents and review the deployment for potential issues. Consider rolling back the deployment if similar incidents occur.",
+      "timestamp": "2026-05-25T16:10:03.157Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779724937848,
+      "incidentId": "live-Audit Log Delays",
+      "title": "Audit Log Delays",
+      "service": "Audit Logs",
+      "root_cause": "Resolved Incident",
+      "accuracy": "High",
+      "fix": "No further action required",
+      "timestamp": "2026-05-25T16:02:17.848Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779724253729,
+      "incidentId": "live-Worker Pages Post-Deployment Errors",
+      "title": "Worker Pages Post-Deployment Errors",
+      "service": "Pages",
+      "root_cause": "Post-deployment configuration issue with Worker Pages",
+      "accuracy": "High",
+      "fix": "Redeploy the Pages application to resolve any post-deployment configuration issues.",
+      "timestamp": "2026-05-25T15:50:53.729Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779724132691,
+      "incidentId": "live-API Errors",
+      "title": "API Errors",
+      "service": "API",
+      "root_cause": "Insufficient information to determine root cause, but given the lack of anomalies, errors, and critical logs, it is likely related to a previous issue that has been resolved.",
+      "accuracy": "Low",
+      "fix": "No fix is required at this time, but it is recommended to continue monitoring the service for any potential future issues.",
+      "timestamp": "2026-05-25T15:48:52.691Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779724121690,
+      "incidentId": "live-API Errors",
+      "title": "API Errors",
+      "service": "API",
+      "root_cause": "Insufficient information to determine root cause, but the 'API Errors' commit and 'First occurrence' memory context may be related",
+      "accuracy": "Low",
+      "fix": "Investigate the 'API Errors' commit, review the code changes, and monitor the service for further errors to determine the root cause and implement a fix.",
+      "timestamp": "2026-05-25T15:48:41.690Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779724047618,
+      "incidentId": "live-API Errors",
+      "title": "API Errors",
+      "service": "API",
+      "root_cause": "Insufficient information to determine root cause, but the 'API Errors' commit and 'First occurrence' memory context may be related",
+      "accuracy": "Low",
+      "fix": "Investigate the 'API Errors' commit, review the code changes, and monitor the service for further errors to determine the root cause and implement a fix.",
+      "timestamp": "2026-05-25T15:47:27.618Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779724038143,
+      "incidentId": "incident-db-exhaustion",
+      "title": "Database Connection Pool Exhaustion",
+      "service": "user-auth-service",
+      "root_cause": "Missing db.release() call in the login handler after v2.4.1 deployment",
+      "accuracy": "High",
+      "fix": "Implement the missing db.release() call in the login handler to ensure proper connection release after use, and consider increasing the connection pool size or optimizing database queries to prevent future exhaustion",
+      "timestamp": "2026-05-25T15:47:18.143Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
+      "id": 1779723629465,
+      "incidentId": "live-API Errors",
+      "title": "API Errors",
+      "service": "API",
+      "root_cause": "Insufficient data to determine root cause, but recent deployment may be related",
+      "accuracy": "Low",
+      "fix": "Monitor the service for further issues and review the recent deployment for potential problems",
+      "timestamp": "2026-05-25T15:40:29.465Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779723624852,
+      "incidentId": "incident-memory-leak",
+      "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
+      "service": "recommendation-engine",
+      "root_cause": "Unbounded global array accumulation in Node.js heap memory due to lack of eviction policy in globalEventCache",
+      "accuracy": "High",
+      "fix": "Implement an eviction policy for the globalEventCache array, such as a TTL (time-to-live) or LRU (least-recently-used) cache, to prevent unbounded growth and mitigate the memory leak. Additionally, consider optimizing the cache data structure and reviewing the telemetry tracker implementation to minimize memory usage.",
+      "timestamp": "2026-05-25T15:40:24.852Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
+      "id": 1779722539905,
+      "incidentId": "live-API Errors",
+      "title": "API Errors",
+      "service": "API",
+      "root_cause": "Insufficient information to determine root cause, but recent deployment may be related",
+      "accuracy": "Low",
+      "fix": "Monitor the service for further issues and review the recent deployment for potential problems",
+      "timestamp": "2026-05-25T15:22:19.905Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779716797267,
+      "incidentId": "incident-db-exhaustion",
+      "title": "Database Connection Pool Exhaustion",
+      "service": "user-auth-service",
+      "root_cause": "Missing db.release() call in the login handler after v2.4.1 deployment",
+      "accuracy": "High",
+      "fix": "Implement a db.release() call in the catch block of the login handler to ensure connections are properly released back to the pool after use, and consider increasing the connection pool size or optimizing database queries to reduce the likelihood of pool exhaustion.",
+      "timestamp": "2026-05-25T13:46:37.267Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
+      "id": 1779649690106,
+      "incidentId": "live-API Errors",
+      "title": "API Errors",
+      "service": "API",
+      "root_cause": "Recent deployment",
+      "accuracy": "High",
+      "fix": "Monitor the results of the fix implemented and consider rolling back the recent deployment if issues persist.",
+      "timestamp": "2026-05-24T19:08:10.106Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
       "id": 1779647909410,
       "incidentId": "incident-memory-leak",
       "title": "Node.js Heap Memory Leak — Global Cache Accumulation",
@@ -62,7 +254,12 @@
     }
   ],
   "patterns": {
-    "api-errors": 1,
-    "node.js-heap-memory": 4
+    "api-errors": 7,
+    "node.js-heap-memory": 7,
+    "database-connection-pool": 2,
+    "worker-pages-post-deployment": 1,
+    "audit-log-delays": 2,
+    "incident-with-actions": 1,
+    "slow-build-start": 1
   }
 }

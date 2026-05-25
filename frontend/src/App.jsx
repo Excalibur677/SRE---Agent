@@ -181,6 +181,7 @@ function MemoryCard({ item, onRerun }) {
 // MAIN APP
 // ════════════════════════════════════════════════════════════════════════════
 export default function App() {
+  
   // Core state
   const [mode, setMode]             = useState("mock");
   const [mockList, setMockList]     = useState([]);
@@ -524,14 +525,23 @@ export default function App() {
               <span className="text-white/60">Memory</span>
               <span className={`font-bold ${liveMetrics.memory > 85 ? "text-red-400" : "text-white"}`}>{liveMetrics.memory}%</span>
             </div>
+            {/* Net ↓ */}
             <div className="flex items-center gap-1.5">
               <Wifi className="w-3.5 h-3.5 text-cyan-400" />
               <span className="text-white/60">Net ↓</span>
-              <span className="font-bold text-white">{(liveMetrics.network_recv_bytes / 1024).toFixed(1)} KB/s</span>
+              {/* FIX: Use net_recv instead of network_recv_bytes */}
+              <span className="font-bold text-white">
+                {liveMetrics.net_recv != null ? (liveMetrics.net_recv / 1024).toFixed(1) : "0.0"} KB/s
+              </span>
             </div>
+
+            {/* Net ↑ */}
             <div className="flex items-center gap-1.5">
               <span className="text-white/60">Net ↑</span>
-              <span className="font-bold text-white">{(liveMetrics.network_sent_bytes / 1024).toFixed(1)} KB/s</span>
+              {/* FIX: Use net_sent instead of network_sent_bytes */}
+              <span className="font-bold text-white">
+                {liveMetrics.net_sent != null ? (liveMetrics.net_sent / 1024).toFixed(1) : "0.0"} KB/s
+              </span>
             </div>
             <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${agentActive ? "border-emerald-500/30 bg-emerald-500/10" : "border-white/10"}`}>
               <Bot className={`w-3 h-3 ${agentActive ? "text-emerald-400" : "text-white/30"}`} />
@@ -847,7 +857,7 @@ export default function App() {
 
                       {/* Root cause */}
                       <div className="liquid-glass rounded-3xl p-6 flex items-start gap-5 border border-violet-500/20">
-                        <Ring pct={accuracy} />
+                        
                         <div className="flex-1 min-w-0">
                           <p className="text-[10px] uppercase tracking-widest text-violet-400 mb-2">Root Cause Identified</p>
                           <p className="text-base font-bold text-white leading-snug mb-3">{analysis.root_cause}</p>
@@ -984,7 +994,7 @@ export default function App() {
             <Bot className="w-4 h-4 text-violet-400" />
             <span className="serif text-white/40">SRE-Pulse AI Agent</span>
           </div>
-          <p className="text-xs text-white/20">Hackathon · {new Date().getFullYear()} · Groq LLaMA 3.3 · 4-Tool Agent</p>
+          <p className="text-xs text-white/20">Hackathon · {new Date().getFullYear()} · 4-Tool Agent</p>
           <div className="flex items-center gap-4 text-xs text-white/30">
             <span className="flex items-center gap-1"><Activity className="w-3.5 h-3.5 text-emerald-400" />Prometheus</span>
             <span className="flex items-center gap-1"><Radio className="w-3.5 h-3.5 text-orange-400" />StatusPage APIs</span>

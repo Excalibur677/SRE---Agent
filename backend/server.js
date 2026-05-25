@@ -53,17 +53,48 @@ async function queryProm(query) {
 }
 
 async function getLiveMetrics() {
-  const [cpuR, memR, netRecvR, netSentR] = await Promise.all([
-    queryProm('100 - (avg by (instance) (rate(windows_cpu_time_total{mode="idle"}[1m])) * 100)'),
-    queryProm('100 - ((windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes) * 100)'),
-    queryProm('rate(windows_net_bytes_received_total[1m])'),
-    queryProm('rate(windows_net_bytes_sent_total[1m])'),
-  ]);
+  let cpu = 0;
+  let memory = 0;
+  let net_recv = 0;
+  let net_sent = 0;
+
+  // 1. Fetch CPU
+  try {
+    const cpuR = await queryProm('100 - (avg by (instance) (rate(windows_cpu_time_total{mode="idle"}[1m])) * 100)');
+    if (cpuR && cpuR.length > 0 && cpuR[0]?.value?.[1]) {
+      cpu = parseFloat(parseFloat(cpuR[0].value[1]).toFixed(1));
+    }
+  } catch (e) { console.error("Error parsing CPU:", e); }
+
+  // 2. Fetch Memory
+  try {
+    const memR = await queryProm('100 - ((windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes) * 100)');
+    if (memR && memR.length > 0 && memR[0]?.value?.[1]) {
+      memory = parseFloat(parseFloat(memR[0].value[1]).toFixed(1));
+    }
+  } catch (e) { console.error("Error parsing Memory:", e); }
+
+  // 3. Fetch Network Receive (Download Speed)
+  try {
+    const netRecvR = await queryProm('sum(rate(windows_net_bytes_received_total[1m]))');
+    if (netRecvR && netRecvR.length > 0 && netRecvR[0]?.value?.[1]) {
+      net_recv = parseFloat(parseFloat(netRecvR[0].value[1]).toFixed(0));
+    }
+  } catch (e) { console.error("Error parsing Network Recv:", e); }
+
+  // 4. Fetch Network Sent (Upload Speed)
+  try {
+    const netSentR = await queryProm('sum(rate(windows_net_bytes_sent_total[1m]))');
+    if (netSentR && netSentR.length > 0 && netSentR[0]?.value?.[1]) {
+      net_sent = parseFloat(parseFloat(netSentR[0].value[1]).toFixed(0));
+    }
+  } catch (e) { console.error("Error parsing Network Sent:", e); }
+
   return {
-    cpu:    parseFloat(parseFloat(cpuR[0]?.value?.[1]    ?? 0).toFixed(1)),
-    memory: parseFloat(parseFloat(memR[0]?.value?.[1]    ?? 0).toFixed(1)),
-    net_recv: parseFloat(parseFloat(netRecvR[0]?.value?.[1] ?? 0).toFixed(0)),
-    net_sent: parseFloat(parseFloat(netSentR[0]?.value?.[1] ?? 0).toFixed(0)),
+    cpu,
+    memory,
+    net_recv,
+    net_sent,
     timestamp: new Date().toISOString(),
   };
 }
