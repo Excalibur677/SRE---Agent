@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "cors";
+import cors from "cors"; // KEEP THIS
 import dotenv from "dotenv";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { fileURLToPath } from "url";
@@ -10,17 +10,21 @@ dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
-const cors = require('cors');
-const app        = express();
+
+// DELETE THE LINE: const cors = require('cors'); <--- DELETE THIS
+
+const app        = express(); // KEEP THIS
 const PORT       = process.env.PORT || 3001;
 
+// Now this will work because 'cors' was imported at the top
 app.use(cors({
-    origin: "*", // Allows any frontend to connect (Perfect for hackathons)
+    origin: "*", 
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
 
 app.use(express.json());
+
 
 // ── Data ──────────────────────────────────────────────────────────────────
 const incidents  = JSON.parse(readFileSync(join(__dirname, "mockIncidents.json"), "utf-8"));
