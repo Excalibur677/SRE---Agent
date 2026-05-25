@@ -10,10 +10,16 @@ dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
+const cors = require('cors');
 const app        = express();
 const PORT       = process.env.PORT || 3001;
 
-app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"], credentials: true }));
+app.use(cors({
+    origin: "*", // Allows any frontend to connect (Perfect for hackathons)
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
+
 app.use(express.json());
 
 // ── Data ──────────────────────────────────────────────────────────────────
