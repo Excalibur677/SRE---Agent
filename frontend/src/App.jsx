@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API = "https://your-render-url.onrender.com";
 
 const IMGS = {
   hero:    "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80",
