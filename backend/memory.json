@@ -1,6 +1,54 @@
 {
   "incidents": [
     {
+      "id": 1779785561573,
+      "incidentId": "live-Worker Pages Post-Deployment Errors",
+      "title": "Worker Pages Post-Deployment Errors",
+      "service": "Pages",
+      "root_cause": "Post-deployment errors in Worker Pages",
+      "accuracy": "High",
+      "fix": "Redeploy the Worker Pages to resolve the 5xx errors.",
+      "timestamp": "2026-05-26T08:52:41.573Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779785470535,
+      "incidentId": "live-Incident with Actions",
+      "title": "Incident with Actions",
+      "service": "Actions",
+      "root_cause": "Misconfigured health check on an internal service",
+      "accuracy": "High",
+      "fix": "Strengthen health check configuration and evaluate automated mitigations to rebalance traffic when a region is degraded",
+      "timestamp": "2026-05-26T08:51:10.535Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779785357381,
+      "incidentId": "live-Audit Log Delays",
+      "title": "Audit Log Delays",
+      "service": "Audit Logs",
+      "root_cause": "Unknown, but possibly related to a recent deployment",
+      "accuracy": "Low",
+      "fix": "Monitor the service for further incidents, review the deployment changes, and consider rolling back to a previous version if issues persist.",
+      "timestamp": "2026-05-26T08:49:17.381Z",
+      "isRecurring": false,
+      "source": "live"
+    },
+    {
+      "id": 1779785316114,
+      "incidentId": "incident-db-exhaustion",
+      "title": "Database Connection Pool Exhaustion",
+      "service": "user-auth-service",
+      "root_cause": "Missing db.release() call in the login handler after v2.4.1 deployment",
+      "accuracy": "High",
+      "fix": "Roll back to the previous version or patch the v2.4.1 version to include the missing db.release() call in the login handler to prevent connection pool exhaustion",
+      "timestamp": "2026-05-26T08:48:36.114Z",
+      "isRecurring": false,
+      "source": "mock"
+    },
+    {
       "id": 1779726028051,
       "incidentId": "live-Slow build start time in Workers Builds",
       "title": "Slow build start time in Workers Builds",
@@ -256,10 +304,10 @@
   "patterns": {
     "api-errors": 7,
     "node.js-heap-memory": 7,
-    "database-connection-pool": 2,
-    "worker-pages-post-deployment": 1,
-    "audit-log-delays": 2,
-    "incident-with-actions": 1,
+    "database-connection-pool": 3,
+    "worker-pages-post-deployment": 2,
+    "audit-log-delays": 3,
+    "incident-with-actions": 2,
     "slow-build-start": 1
   }
 }
